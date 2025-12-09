@@ -941,7 +941,7 @@ namespace Eden_World_Maniputor_2._0
             listView1.Refresh();
             files.Clear();
             List<string> temp = new List<string>();
-            var url = "http://app.edengame.net/list2.php?search=" + text;
+            var url = "http://app2.edengame.net/list2.php?search=" + text;
             var client = new WebClient();
             using (var stream = client.OpenRead(url))
             using (var reader = new StreamReader(stream))
@@ -975,7 +975,7 @@ namespace Eden_World_Maniputor_2._0
             WebClient webClient = new WebClient();
             selectedText = files[listView1.FocusedItem.Index].Value;
 
-            string urlString = "http://files.edengame.net/" + selectedText;
+            string urlString = "http://files2.edengame.net/" + selectedText;
 
             byte[] data = webClient.DownloadData(urlString);
             byte[] decompressed = Decompress(data);
