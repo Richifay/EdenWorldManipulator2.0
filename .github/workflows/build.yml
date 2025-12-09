@@ -1,0 +1,46 @@
+name: Build Windows Application
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+      
+    - name: Build Release (x64)
+      run: |
+        msbuild "Eden World Manipulator 2.0.sln" `
+          /p:Configuration=Release `
+          /p:Platform=x64 `
+          /p:RestorePackages=false `
+          /m
+      
+    - name: Verify executable exists
+      run: |
+        $exePath = "Eden World Manipulator 2.0\bin\x64\Release\Eden World Manipulator.exe"
+        if (Test-Path $exePath) {
+          Write-Host "✓ Executable found: $exePath"
+          Get-Item $exePath | Select-Object Name, Length, LastWriteTime
+        } else {
+          Write-Error "✗ Executable not found at: $exePath"
+          exit 1
+        }
+      
+    - name: Upload executable artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Eden-World-Manipulator
+        path: "Eden World Manipulator 2.0/bin/x64/Release/Eden World Manipulator.exe"
+        retention-days: 30
+
